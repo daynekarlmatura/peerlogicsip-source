@@ -551,7 +551,6 @@ BEGIN_MESSAGE_MAP(Dialer, CBaseDialog)
 	ON_BN_CLICKED(IDCANCEL, OnBnClickedCancel)
 	ON_WM_SETCURSOR()
 	ON_WM_CTLCOLOR()
-	ON_BN_CLICKED(IDC_DIALER_DND, &Dialer::OnBnClickedDND)
 	ON_BN_CLICKED(IDC_DIALER_FWD, &Dialer::OnBnClickedFWD)
 	ON_BN_CLICKED(IDC_DIALER_AA, &Dialer::OnBnClickedAA)
 	ON_BN_CLICKED(IDC_DIALER_AC, &Dialer::OnBnClickedAC)
@@ -640,12 +639,6 @@ void Dialer::RebuildButtons(bool init)
 		m_isButtonVoicemailVisible = false;
 		UpdateVoicemailButton(m_hasVoicemail);
 	}
-	if (IsChild(&m_ButtonDND)) {
-		if (m_ToolTip) {
-			m_ToolTip.DelTool(&m_ButtonDND);
-		}
-		m_ButtonDND.DestroyWindow();
-	}
 	if (IsChild(&m_ButtonFWD)) {
 		if (m_ToolTip) {
 			m_ToolTip.DelTool(&m_ButtonFWD);
@@ -676,14 +669,13 @@ void Dialer::RebuildButtons(bool init)
 		}
 		m_ButtonRec.DestroyWindow();
 	}
-	bool addDND = accountSettings.denyIncoming == _T("button");
 	bool addFWD = accountSettings.forwarding == _T("button") && !accountSettings.forwardingNumber.IsEmpty();
 	bool addAA = accountSettings.autoAnswer == _T("button");
 	bool addAC = accountSettings.buttonAC && !accountSettings.singleMode;
 	bool addConf = accountSettings.buttonCONF;
 	
 	bool addRec = accountSettings.recordingButton;
-	if (addDND || addFWD || addAA || addAC || addConf || addRec) {
+	if (addFWD || addAA || addAC || addConf || addRec) {
 		CRect windowRect;
 		if (!init) {
 			GetWindowRect(windowRect);
@@ -759,17 +751,6 @@ void Dialer::RebuildButtons(bool init)
 			AutoMove(m_ButtonFWD.m_hWnd, 100, 100, 0, 0);
 			if (m_ToolTip) {
 				m_ToolTip.AddTool(&m_ButtonFWD, Translate(_T("Call Forwarding")));
-			}
-			rect.left -= stepPx;
-			rect.right -= stepPx;
-		}
-		if (addDND) {
-			m_ButtonDND.Create(Translate(_T("DND")), WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_CHECKBOX | BS_PUSHLIKE, rect, this, IDC_DIALER_DND);
-			m_ButtonDND.SetFont(GetFont());
-			m_ButtonDND.SetCheck(accountSettings.DND ? BST_CHECKED : BST_UNCHECKED);
-			AutoMove(m_ButtonDND.m_hWnd, 100, 100, 0, 0);
-			if (m_ToolTip) {
-				m_ToolTip.AddTool(&m_ButtonDND, Translate(_T("Do Not Disturb")));
 			}
 			rect.left -= stepPx;
 			rect.right -= stepPx;
@@ -1050,7 +1031,7 @@ void Dialer::DTMF(CString digits, bool force)
 		delayed = true;
 	}
 	pjsua_call_id call_id = PJSUA_INVALID_ID;
-	MessagesContact*  messagesContact = mainDlg->messagesDlg->GetMessageContact();
+	MessagesContact* messagesContact = mainDlg->messagesDlg->GetMessageContact();
 	if (messagesContact && messagesContact->callId != -1) {
 		call_id = messagesContact->callId;
 		if (delayed) {
@@ -1343,7 +1324,7 @@ void Dialer::OnBnClickedTransfer()
 
 void Dialer::OnBnClickedEnd()
 {
-	MessagesContact*  messagesContact = mainDlg->messagesDlg->GetMessageContact();
+	MessagesContact* messagesContact = mainDlg->messagesDlg->GetMessageContact();
 	if (messagesContact && messagesContact->callId != -1) {
 		msip_call_end(messagesContact->callId);
 	}
@@ -1645,11 +1626,6 @@ BOOL Dialer::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	return CBaseDialog::OnSetCursor(pWnd, nHitTest, message);
 }
 
-void Dialer::OnBnClickedDND()
-{
-	mainDlg->SwitchDND();
-}
-
 void Dialer::OnBnClickedFWD()
 {
 	accountSettings.FWD = m_ButtonFWD.GetCheck() == BST_CHECKED;
@@ -1683,7 +1659,7 @@ void Dialer::OnBnClickedConf()
 
 void Dialer::OnBnClickedRec()
 {
-	MessagesContact*  messagesContact = mainDlg->messagesDlg->GetMessageContact();
+	MessagesContact* messagesContact = mainDlg->messagesDlg->GetMessageContact();
 	if (messagesContact && messagesContact->callId != -1) {
 		call_user_data *user_data = (call_user_data *)pjsua_call_get_user_data(messagesContact->callId);
 		if (user_data) {
@@ -1715,12 +1691,6 @@ void Dialer::OnBnClickedShortcut(UINT nID)
 	}
 }
 
-void Dialer::SetCheckDND(bool checked)
-{
-	if (IsChild(&m_ButtonDND)) {
-		m_ButtonDND.SetCheck(checked ? BST_CHECKED : BST_UNCHECKED);
-	}
-}
 void Dialer::SetCheckREC(bool checked)
 {
 	if (IsChild(&m_ButtonRec)) {
@@ -1734,3 +1704,5 @@ void Dialer::EnableButtonCONF(bool enabled)
 	}
 }
 
+
+}

@@ -870,7 +870,7 @@ static void on_incoming_call(pjsua_acc_id acc, pjsua_call_id call_id,
 		}
 		else if (accountSettings.denyIncoming == _T("button")) {
 			reject = accountSettings.DND;
-			reason = _T("Do Not Disturb");
+			//reason = _T("Do Not Disturb");
 		}
 		else if (accountSettings.denyIncoming == _T("user")) {
 			SIPURI sipuri_curr;
@@ -3776,8 +3776,8 @@ void CmainDlg::UpdateWindowText(CString text, int icon, bool afterRegister)
 				}
 				else if (str == _T("OK")) {
 					if (m_PresenceStatus == PJRPID_ACTIVITY_BUSY) {
-						icon = IDI_BUSY;
-						str = Translate(_T("Do Not Disturb"));
+						//icon = IDI_BUSY;
+						//str = Translate(_T("Do Not Disturb"));
 					}
 					else {
 						if (m_PresenceStatus == PJRPID_ACTIVITY_AWAY) {

@@ -76,7 +76,7 @@ class Dialer :
 
 public:
 
-	CButtonBottom m_ButtonDND;
+	//CButtonBottom m_ButtonDND;
 	CButtonBottom m_ButtonFWD;
 	CButtonBottom m_ButtonAA;
 	CButtonBottom m_ButtonAC;
@@ -121,7 +121,7 @@ public:
 	void Clear(bool update=true);
 	void TimerVuMeter();
 
-	void SetCheckDND(bool checked);
+	//void SetCheckDND(bool checked);
 	void SetCheckREC(bool checked);
 	void EnableButtonCONF(bool enabled);
 
@@ -142,7 +142,7 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd *pWnd, UINT nCtlColor);
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
-	afx_msg void OnBnClickedDND(); 
+	//afx_msg void OnBnClickedDND(); 
 	afx_msg void OnBnClickedFWD(); 
 	afx_msg void OnBnClickedAA();
 	afx_msg void OnBnClickedAC();
